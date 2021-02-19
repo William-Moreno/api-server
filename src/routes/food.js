@@ -39,17 +39,17 @@ async function createFood(request, response, next) {
   response.json(newFood);
 }
 
-// async function updateFood(request, response, next) {
-//   const id = parseInt(request.params.id);
-//   const foodObject = request.body;
-//   let resObject = food.update(id, foodObject);
-//   response.json(resObject);
-// }
+async function updateFood(request, response, next) {
+  const id = parseInt(request.params.id);
+  const foodObject = request.body;
+  let resObject = food.update(id, foodObject);
+  response.json(resObject);
+}
 
-// async function removeFood(request, response, next) {
-//   const id = parseInt(request.params.id);
-//   let resObject = food.delete(id);
-//   response.json(resObject);
-// }
+async function removeFood(request, response, next) {
+  const id = parseInt(request.params.id);
+  let resObject = food.delete(id);
+  response.json(resObject);
+}
 
 module.exports = router;
