@@ -130,7 +130,7 @@ describe('Server testing', () => {
 
     console.log(deleteResponse.body);
     expect(deleteResponse.status).toEqual(200);
-    // expect(deleteResponse.body.id).toEqual(1);
+    expect(deleteResponse.body._id).toEqual(foodTestId);
     expect(deleteResponse.body.name).toEqual('PB&J');
   });
 
@@ -144,7 +144,7 @@ describe('Server testing', () => {
     const deleteResponse = await request.delete(`/clothes/${clothesTestId}`);
 
     expect(deleteResponse.status).toEqual(200);
-    // expect(deleteResponse.body.id).toEqual(1);
+    expect(deleteResponse.body._id).toEqual(clothesTestId);
     expect(deleteResponse.body.name).toEqual('Gloves');
   });
 

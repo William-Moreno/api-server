@@ -21,7 +21,6 @@ describe('Testing server routes', () => {
       type: 'Dinner',
     });
 
-
     expect(response.status).toEqual(200);
     expect(response.body._id).toBeTruthy();
     expect(response.body.name).toEqual('Pizza');
