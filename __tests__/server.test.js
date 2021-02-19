@@ -39,8 +39,8 @@ describe('Server testing', () => {
     });
 
     expect(response.status).toEqual(200);
-    expect(response.body.id).toEqual(1);
-    expect(response.body.data.color).toEqual('White');
+    expect(response.body._id).toBeTruthy();
+    expect(response.body.color).toEqual('White');
   });
   
   it('Should return a list of records using GET /food', async () => {
@@ -54,7 +54,7 @@ describe('Server testing', () => {
     const response = await request.get('/clothes');
 
     expect(response.status).toEqual(200);
-    expect(response.body[0].data.name).toEqual('Socks');
+    expect(response.body[0].name).toEqual('Socks');
   });
 
   it('Should return specified food by request parameter on GET /food/', async () => {
@@ -72,49 +72,80 @@ describe('Server testing', () => {
   });
 
   it('Should return specified clothes by request parameter on GET /clothes', async () => {
-    const response = await request.get('/clothes/1');
+    const response = await request.post('/clothes').send({
+      name: 'Jacket',
+      color: 'Red',
+    });
+    let clothesTestId = response.body._id;
 
-    expect(response.status).toEqual(200);
-    expect(response.body.id).toEqual(1);
-    expect(response.body.data.name).toEqual('Socks');
+    const getResponse = await request.get(`/clothes/${clothesTestId}`);
+
+    expect(getResponse.status).toEqual(200);
+    expect(getResponse.body[0]._id).toEqual(clothesTestId);
+    expect(getResponse.body[0].name).toEqual('Jacket');
   });
 
   it('Should update specified record by request parameter on PUT /food', async () => {
-    const response = await request.put('/food/1').send({
-      name: 'Pizza',
-      type: 'Anytime',
+    const response = await request.post('/food').send({
+      name: 'PB&J',
+      type: 'Lunch',
+    });
+    let foodTestId = response.body._id;
+
+    const putResponse = await request.put(`/food/${foodTestId}`).send({
+      name: 'Ice Cream',
+      type: 'Dessert',
     });
 
-    expect(response.status).toEqual(200);
-    expect(response.body.id).toEqual(1);
-    expect(response.body.data).toEqual({name: 'Pizza',type: 'Anytime'});
+    expect(putResponse.status).toEqual(200);
+    expect(putResponse.body._id).toEqual(foodTestId);
+    expect(putResponse.body.name).toEqual('Ice Cream');
   });
 
   it('Should update specified record by request parameter on PUT /clothes', async () => {
-    const response = await request.put('/clothes/1').send({
-      name: 'T-Shirt',
-      color: 'White',
+    const response = await request.post('/clothes').send({
+      name: 'Hat',
+      color: 'Blue',
+    });
+    let clothesTestId = response.body._id;
+
+    const putResponse = await request.put(`/clothes/${clothesTestId}`).send({
+      name: 'Pants',
+      color: 'Black',
     });
 
-    expect(response.status).toEqual(200);
-    expect(response.body.id).toEqual(1);
-    expect(response.body.data).toEqual({name: 'T-Shirt',color: 'White'});
+    expect(putResponse.status).toEqual(200);
+    expect(putResponse.body._id).toEqual(clothesTestId);
+    expect(putResponse.body.color).toEqual('Black');
   });
 
   it('Should destroy specified record by request parameter on DELETE /food', async () => {
-    const response = await request.delete('/food/1');
+    const response = await request.post('/food').send({
+      name: 'PB&J',
+      type: 'Lunch',
+    });
+    let foodTestId = response.body._id;
 
-    expect(response.status).toEqual(200);
-    expect(response.body.id).toEqual(1);
-    expect(response.body.data).toEqual(null);
+    const deleteResponse = await request.delete(`/food/${foodTestId}`);
+
+    console.log(deleteResponse.body);
+    expect(deleteResponse.status).toEqual(200);
+    // expect(deleteResponse.body.id).toEqual(1);
+    expect(deleteResponse.body.name).toEqual('PB&J');
   });
 
   it('Should destroy specified record by request parameter on DELETE /clothes', async () => {
-    const response = await request.delete('/clothes/1');
+    const response = await request.post('/clothes').send({
+      name: 'Gloves',
+      color: 'White',
+    });
+    let clothesTestId = response.body._id;
 
-    expect(response.status).toEqual(200);
-    expect(response.body.id).toEqual(1);
-    expect(response.body.data).toEqual(null);
+    const deleteResponse = await request.delete(`/clothes/${clothesTestId}`);
+
+    expect(deleteResponse.status).toEqual(200);
+    // expect(deleteResponse.body.id).toEqual(1);
+    expect(deleteResponse.body.name).toEqual('Gloves');
   });
 
 });

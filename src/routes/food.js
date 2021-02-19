@@ -16,7 +16,6 @@ router.put('/food/:id', validator, updateFood);
 router.delete('/food/:id', validator, removeFood);
 
 
-
 async function getFood(request, response, next) {
   
   const id = request.params.id;
@@ -34,16 +33,16 @@ async function createFood(request, response, next) {
 }
 
 async function updateFood(request, response, next) {
-  const id = parseInt(request.params.id);
+  const id = request.params.id;
   const foodObject = request.body;
-  let resObject = foodController.update(id, foodObject);
-  response.json(resObject);
+  let changeFood = await foodController.update(id, foodObject);
+  response.json(changeFood);
 }
 
 async function removeFood(request, response, next) {
-  const id = parseInt(request.params.id);
-  let resObject = foodController.delete(id);
-  response.json(resObject);
+  const id = request.params.id;
+  let eraseFood = await foodController.delete(id);
+  response.json(eraseFood);
 }
 
 module.exports = router;

@@ -33,16 +33,16 @@ async function createClothes(request, response, next) {
 }
 
 async function updateClothes(request, response, next) {
-  const id = parseInt(request.params.id);
+  const id = request.params.id;
   const clothesObject = request.body;
-  let resObject = clothesController.update(id, clothesObject);
-  response.json(resObject);
+  let changeClothes = await clothesController.update(id, clothesObject);
+  response.json(changeClothes);
 }
 
 async function removeClothes(request, response, next) {
-  const id = parseInt(request.params.id);
-  let resObject = clothesController.delete(id);
-  response.json(resObject);
+  const id = request.params.id;
+  let removeClothes = await clothesController.delete(id);
+  response.json(removeClothes);
 }
 
 module.exports = router;
