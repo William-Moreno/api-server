@@ -25,12 +25,6 @@ async function getFood(request, response, next) {
   response.json(foods);
 }
 
-// async function getFoodById(request, response, next) {
-//   const id = parseInt(request.params.id);
-//   let resObject = food.read(id);
-//   response.json(resObject);
-// }
-
 async function createFood(request, response, next) {
   
   const foodObj = request.body;
@@ -42,13 +36,13 @@ async function createFood(request, response, next) {
 async function updateFood(request, response, next) {
   const id = parseInt(request.params.id);
   const foodObject = request.body;
-  let resObject = food.update(id, foodObject);
+  let resObject = foodController.update(id, foodObject);
   response.json(resObject);
 }
 
 async function removeFood(request, response, next) {
   const id = parseInt(request.params.id);
-  let resObject = food.delete(id);
+  let resObject = foodController.delete(id);
   response.json(resObject);
 }
 

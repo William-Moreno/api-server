@@ -1,5 +1,6 @@
 'use strict';
 
+require('@code-fellows/supergoose');
 const supertest = require('supertest');
 const server = require('../src/server.js');
 const request = supertest(server.app);
@@ -27,8 +28,8 @@ describe('Server testing', () => {
     });
 
     expect(response.status).toEqual(200);
-    expect(response.body.id).toEqual(1);
-    expect(response.body.data.name).toEqual('Pizza');
+    expect(response.body._id).toBeTruthy();
+    expect(response.body.name).toEqual('Pizza');
   });
 
   it('Should successfully create clothes on POST /clothes', async () => {
@@ -46,7 +47,7 @@ describe('Server testing', () => {
     const response = await request.get('/food');
 
     expect(response.status).toEqual(200);
-    expect(response.body[0].data.type).toEqual('Dinner');
+    expect(response.body[0].type).toEqual('Dinner');
   });
 
   it('Should return a list of records using GET /clothes', async () => {
@@ -57,11 +58,17 @@ describe('Server testing', () => {
   });
 
   it('Should return specified food by request parameter on GET /food/', async () => {
-    const response = await request.get('/food/1');
+    const response = await request.post('/food').send({
+      name: 'Waffles',
+      type: 'Breakfast',
+    });
+    let foodTestId = response.body._id;
 
-    expect(response.status).toEqual(200);
-    expect(response.body.id).toEqual(1);
-    expect(response.body.data.type).toEqual('Dinner');
+    const getResponse = await request.get(`/food/${foodTestId}`);
+
+    expect(getResponse.status).toEqual(200);
+    expect(getResponse.body[0]._id).toEqual(foodTestId);
+    expect(getResponse.body[0].name).toEqual('Waffles');
   });
 
   it('Should return specified clothes by request parameter on GET /clothes', async () => {

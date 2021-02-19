@@ -5,42 +5,43 @@ const router = express.Router();
 
 const validator = require('../middleware/validator.js');
 
-const ClothesInterface = require('../models/clothes.js');
-const clothes = new ClothesInterface();
+const ClothesInterface = require('../models/clothes-interface.js');
+const ClothesModel = require('../models/clothes-model.js');
+const clothesController = new ClothesInterface(ClothesModel);
 
-router.get('/clothes', getCloset);
-router.get('/clothes/:id', validator, getClothesById);
+router.get('/clothes', getClothes);
+router.get('/clothes/:id', validator, getClothes);
 router.post('/clothes', createClothes);
 router.put('/clothes/:id', validator, updateClothes);
 router.delete('/clothes/:id', validator, removeClothes);
 
-function getCloset(request, response, next) {
-  let resObject = clothes.read();
-  response.json(resObject);
+
+async function getClothes(request, response, next) {
+  
+  const id = request.params.id;
+  const closet = await clothesController.read(id);
+
+  response.json(closet);
 }
 
-function getClothesById(request, response, next) {
+async function createClothes(request, response, next) {
+  
+  const clothesObj = request.body;
+  const newClothes = await clothesController.create(clothesObj);
+
+  response.json(newClothes);
+}
+
+async function updateClothes(request, response, next) {
   const id = parseInt(request.params.id);
-  let resObject = clothes.read(id);
-  response.json(resObject);
-}
-
-function createClothes(request, response, next) {
   const clothesObject = request.body;
-  let resObject = clothes.create(clothesObject);
+  let resObject = clothesController.update(id, clothesObject);
   response.json(resObject);
 }
 
-function updateClothes(request, response, next) {
+async function removeClothes(request, response, next) {
   const id = parseInt(request.params.id);
-  const clothesObject = request.body;
-  let resObject = clothes.update(id, clothesObject);
-  response.json(resObject);
-}
-
-function removeClothes(request, response, next) {
-  const id = parseInt(request.params.id);
-  let resObject = clothes.delete(id);
+  let resObject = clothesController.delete(id);
   response.json(resObject);
 }
 
