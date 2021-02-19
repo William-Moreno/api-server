@@ -2,27 +2,20 @@
 
 class FoodInterface {
 
-  constructor() {
-    this.id = 0;
-    this.db = [];
+  constructor(model) {
+    this.model = model;
   }
 
   read(id) {
     if(id) {
-      return this.db.find(record => record.id === id);
-    } else {
-      return this.db;
+      return this.model.find({_id: id});
     }
+    return this.model.find({});
   }
 
   create(obj) {
-    let record = {
-      id: this.id += 1,
-      data: obj,
-    };
-
-    this.db.push(record);
-    return record;
+    const document = new this.model(obj);
+    return document.save();
   }
 
   update(id, obj) {
