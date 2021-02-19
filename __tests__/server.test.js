@@ -128,7 +128,6 @@ describe('Server testing', () => {
 
     const deleteResponse = await request.delete(`/food/${foodTestId}`);
 
-    console.log(deleteResponse.body);
     expect(deleteResponse.status).toEqual(200);
     expect(deleteResponse.body._id).toEqual(foodTestId);
     expect(deleteResponse.body.name).toEqual('PB&J');
